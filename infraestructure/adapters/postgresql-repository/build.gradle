@@ -1,0 +1,5 @@
+dependencies {
+    implementation project(':domain-model')
+    implementation project(":receivers-reactive-web")
+
+}

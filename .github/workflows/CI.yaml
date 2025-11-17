@@ -1,0 +1,11 @@
+name: Continuos Integration
+on: # Cuando se activara la integrqación continua
+  pull_request: # con que medio se activara
+    branches: # las ramas donde se acrtiva
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # donde vamos a construir nuestra CI
+    steps:
+      - gity

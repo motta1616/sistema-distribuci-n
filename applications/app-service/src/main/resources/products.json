@@ -1,0 +1,37 @@
+[
+  {
+    "storeId": "1",
+    "sku": "12345",
+    "name": "TV",
+    "quantity": 10,
+    "version": 2
+  },
+  {
+    "storeId": "1",
+    "sku": "67890",
+    "name": "Nevera",
+    "quantity": 20,
+    "version": 2
+  },
+  {
+    "storeId": "2",
+    "sku": "12345",
+    "name": "TV",
+    "quantity": 50,
+    "version": 2
+  },
+  {
+    "storeId": "3",
+    "sku": "12345",
+    "name": "TV",
+    "quantity": 4,
+    "version": 2
+  },
+  {
+    "storeId": "2",
+    "sku": "67890",
+    "name": "Nevera",
+    "quantity": 20,
+    "version": 2
+  }
+]
