@@ -1,11 +1,27 @@
 name: Continuos Integration
 on: # Cuando se activara la integrqación continua
-  pull_request: # con que medio se activara
+  pull_request: # con que medio se activara (pull_request, push)
     branches: # las ramas donde se acrtiva
       - develop
+      - main
+      - release
+      - master
 
 jobs:
   build:
-    runs-on: ubuntu-latest # donde vamos a construir nuestra CI
+    runs-on: ubuntu-latest # donde vamos correr el CI
     steps:
-      - gity
+      - uses: actions/checkout@v5 #se usa en GitHub Actions para clonar el repositorio en el entorno del workflow.
+        name: sistema-distribución
+
+      - name: Instalar Java
+        uses: actions/setup-java@v5
+        with:
+          java-version: '19'
+          distribution: 'temurin'
+
+      - name: Instalar gradle
+        uses: gradle/gradle-build-action@v3
+
+      - name: Compilando
+        run: ./gradlew build

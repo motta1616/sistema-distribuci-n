@@ -13,7 +13,7 @@ import static mercadolibre.com.domain.common.enums.Constants.*;
 @RequiredArgsConstructor
 public class StockItemUseCase extends TraceabilityAndLogging implements StockItemService, ProductFactory {
 
-    private final ProductRepository productRepository;
+    private final ProductRepository productRepository
 
     @Override
     public Mono<Product> findItemProcess(String sku) {
