@@ -23,5 +23,8 @@ jobs:
       - name: Instalar gradle
         uses: gradle/gradle-build-action@v3
 
+      - name: Dar permisos de ejecución a gradlew
+        run: chmod +x ./gradlew
+
       - name: Compilando
         run: ./gradlew build
