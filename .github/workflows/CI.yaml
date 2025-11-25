@@ -1,30 +1,43 @@
-name: Continuos Integration
-on: # Cuando se activara la integrqación continua
-  pull_request: # con que medio se activara (pull_request, push)
-    branches: # las ramas donde se acrtiva
-      - develop
-      - main
-      - release
-      - master
+# File: .github/workflows/CI.yaml
+name: Continuos Integration                             # Nombre del workflow que aparece en la UI de GitHub Actions
+on:                                                    # Define los eventos que disparan el workflow
+  pull_request:                                        # Evento: cuando se crea/actualiza un pull request
+    branches:                                          # Filtro de ramas donde se activa el evento
+      - develop                                        # Incluye la rama develop
+      - main                                           # Incluye la rama main
+      - release                                        # Incluye la rama release
+      - master                                         # Incluye la rama master
 
-jobs:
-  build:
-    runs-on: ubuntu-latest # donde vamos correr el CI
-    steps:
-      - uses: actions/checkout@v5 #se usa en GitHub Actions para clonar el repositorio en el entorno del workflow.
-        name: sistema-distribución
+jobs:                                                  # Sección que agrupa los jobs (tareas) del workflow
+  build:                                               # Job llamado "build"
+    timeout-minutes: 3                                 # Tiempo máximo de ejecución en minutos para este job
+    runs-on: ubuntu-latest                             # Runner/entorno donde se ejecuta el job
+    steps:                                             # Pasos secuenciales que ejecuta el job
+      - uses: actions/checkout@v5                      # Acción para clonar el repositorio en el runner
+        name: sistema-distribución                     # Nombre legible para el paso de checkout
 
-      - name: Instalar Java
-        uses: actions/setup-java@v5
+      - name: Instalar Java                            # Paso: instalar Java en el runner
+        uses: actions/setup-java@v5                    # Acción oficial para configurar JDK
+        with:                                          # Parámetros para la acción setup-java
+          java-version: '19'                           # Versión de Java a instalar
+          distribution: 'temurin'                      # Distribución del JDK (Temurin/OpenJDK)
+
+      - name: Instalar gradle                          # Paso: preparar/instalar Gradle en el runner
+        uses: gradle/gradle-build-action@v3            # Acción oficial de Gradle
+
+      - name: Dar permisos de ejecución a gradlew      # Paso: asegurar que el wrapper sea ejecutable
+        run: chmod +x ./gradlew                        # Comando en shell para setear permisos
+
+      - name: Compilando                               # Paso: compilar/probar el proyecto
+        run: ./gradlew build                           # Ejecuta la tarea build de Gradle (incluye bootJar si aplica)
+
+      - name: verificando coverage
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.7.2
         with:
-          java-version: '19'
-          distribution: 'temurin'
-
-      - name: Instalar gradle
-        uses: gradle/gradle-build-action@v3
-
-      - name: Dar permisos de ejecución a gradlew
-        run: chmod +x ./gradlew
-
-      - name: Compilando
-        run: ./gradlew build
+          paths: |
+            ${{ github.workspace }}/**/build/reports/jacoco/prodNormalDebugCoverage/prodNormalDebugCoverage.xml,
+            ${{ github.workspace }}/**/build/reports/jacoco/**/debugCoverage.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 40
+          min-coverage-changed-files: 60
